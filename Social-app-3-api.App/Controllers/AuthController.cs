@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Common;
 using Social_app_3_api.Model.User;
@@ -59,5 +59,26 @@ namespace Social_app_3_api.Controllers
         }
 
 
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<ActionResult> Login([FromBody] Login loginInput)
+        {
+            var user = await _userRepository.GetUser(loginInput.Email!);
+            var hashedPassword = user.Password;
+            bool isAValidPassword = _authService.VerifyHash(user, loginInput.Password, hashedPassword);
+
+            if (user == null || loginInput.Password == null || !isAValidPassword)
+                return NotFound(new { message = "Usuário ou senha inválidos" });
+
+            user.Password = "";
+
+            var token = _authService.GenerateToken(user);
+
+            return Ok(new
+            {
+                user,
+                token
+            });
+        }
     }
 }

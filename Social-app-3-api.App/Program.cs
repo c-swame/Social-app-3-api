@@ -15,7 +15,9 @@ var builder = WebApplication.CreateBuilder(args);
 var DB_STRING = builder.Configuration.GetConnectionString("DataBase");
 
 builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+// !!!!!!! REMOVER ISSO E RESOLVER O PROBLEMA. APARECE NA ROTA 'post /Post'
 builder.Services.AddControllers().AddJsonOptions(x =>
    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 
